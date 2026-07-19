@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
 import numpy as np
@@ -8,7 +7,6 @@ app = Flask(__name__)
 from flask_cors import CORS
 
 CORS(app, resources={r"/*": {"origins": "*"}})
-
 # Load the AI model once when the server starts
 model = tf.keras.models.load_model("africattles_weight_model.keras")
 
