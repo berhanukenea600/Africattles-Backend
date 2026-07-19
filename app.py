@@ -23,25 +23,38 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    if "image" not in request.files:
-        return jsonify({"error": "No image uploaded"}), 400
+    try:
+        print("1. Request received")
 
-    file = request.files["image"]
+        if "image" not in request.files:
+            return jsonify({"error": "No image uploaded"}), 400
 
-    img = Image.open(file).convert("RGB")
-    img = img.resize((224, 224))
+        file = request.files["image"]
+        print("2. Image received")
 
-    img = np.array(img) / 255.0
-    img = np.expand_dims(img, axis=0)
+        img = Image.open(file).convert("RGB")
+        print("3. Image opened")
 
-    prediction = model.predict(img)
+        img = img.resize((224, 224))
+        print("4. Image resized")
 
-    weight = round(float(prediction[0][0]), 1)
+        img = np.array(img) / 255.0
+        img = np.expand_dims(img, axis=0)
+        print("5. Image processed")
 
-    return jsonify({
-        "predicted_weight": weight,
-        "unit": "kg"
-    })
+        prediction = model.predict(img)
+        print("6. Prediction complete")
+
+        weight = round(float(prediction[0][0]), 1)
+
+        return jsonify({
+            "predicted_weight": weight,
+            "unit": "kg"
+        })
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 @app.route("/test")
 def test():
     return jsonify({"message": "Backend works!"})
