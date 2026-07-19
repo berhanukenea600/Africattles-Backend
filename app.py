@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
-model = tf.keras.models.load_model("africattles_weight_model.keras")
 import tensorflow as tf
 import numpy as np
 
