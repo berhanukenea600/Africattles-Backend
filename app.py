@@ -34,17 +34,10 @@ def predict():
     img = np.array(img) / 255.0
     img = np.expand_dims(img, axis=0)
 
-    # Temporary test
     weight = 250.5
 
     return jsonify({
-        "predicted_weight": weight,
-        "unit": "kg"
-    })
-
-    except Exception as e:
-        print("ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+        "predicted_weight":
 @app.route("/test")
 def test():
     return jsonify({"message": "Backend works!"})
