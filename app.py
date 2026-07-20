@@ -30,33 +30,31 @@ def test():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        if "image" not in request.files:
-            return jsonify({"error": "No image uploaded"}), 400
+        print("Request received")
 
         file = request.files["image"]
 
-        # Read image
         img = Image.open(file).convert("RGB")
-        img = img.resize(IMG_SIZE)
-
-        # Preprocess
-        img = np.array(img, dtype=np.float32) / 255.0
+        img = img.resize((224,224))
+        img = np.array(img)
+        img = img / 255.0
         img = np.expand_dims(img, axis=0)
 
-        # AI prediction
+        print("Before predict")
+
         prediction = model.predict(img, verbose=0)
 
-        weight = round(float(prediction[0][0]), 1)
+        print("Prediction:", prediction)
+
+        weight = float(prediction[0][0])
 
         return jsonify({
-            "predicted_weight": weight,
-            "unit": "kg"
+            "predicted_weight": round(weight,2)
         })
 
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        }), 500
+        print("ERROR:", e)
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
