@@ -33,9 +33,20 @@ def predict():
 
     print("PREDICT ENDPOINT HIT")
 
-    return jsonify({
-        "predicted_weight": 999
-    })
+    try:
+        img = np.zeros((1, 224, 224, 3), dtype=np.float32)
+
+        prediction = model.predict(img, verbose=0)
+
+        print("Prediction:", prediction)
+
+        return jsonify({
+            "predicted_weight": float(prediction[0][0])
+        })
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
