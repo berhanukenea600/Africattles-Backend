@@ -57,7 +57,14 @@ def predict():
 
     print("STEP 7")
 
-    return jsonify({"predicted_weight": 999})
+prediction = model.predict(img, verbose=0)
+
+print("STEP 8")
+print(prediction)
+
+return jsonify({
+    "predicted_weight": float(prediction[0][0])
+})
 
 
 if __name__ == "__main__":
