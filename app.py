@@ -10,7 +10,8 @@ CORS(app)
 
 # Load AI model once
 model = tf.keras.models.load_model("africattles_weight_model.keras")
-
+print("Input shape:", model.input_shape)
+print("Output shape:", model.output_shape)
 IMG_SIZE = (224, 224)
 
 @app.route("/")
