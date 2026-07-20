@@ -31,22 +31,33 @@ def test():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    print("PREDICT ENDPOINT HIT")
+    print("STEP 1")
 
-    try:
-        img = np.zeros((1, 224, 224, 3), dtype=np.float32)
+    file = request.files["image"]
 
-        prediction = model.predict(img, verbose=0)
+    print("STEP 2")
 
-        print("Prediction:", prediction)
+    img = Image.open(file).convert("RGB")
 
-        return jsonify({
-            "predicted_weight": float(prediction[0][0])
-        })
+    print("STEP 3")
 
-    except Exception as e:
-        print("ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+    img = img.resize((224,224))
+
+    print("STEP 4")
+
+    img = np.array(img, dtype=np.float32)
+
+    print("STEP 5")
+
+    img = img / 255.0
+
+    print("STEP 6")
+
+    img = np.expand_dims(img, axis=0)
+
+    print("STEP 7")
+
+    return jsonify({"predicted_weight": 999})
 
 
 if __name__ == "__main__":
