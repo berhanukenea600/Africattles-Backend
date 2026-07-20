@@ -1,16 +1,15 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
 import numpy as np
+import os
 
 app = Flask(__name__)
-from flask_cors import CORS
+CORS(app)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
-# Load the AI model once when the server starts
+# Load model
 model = tf.keras.models.load_model("africattles_weight_model.keras")
-
-IMG_SIZE = (224, 224)
 
 @app.route("/")
 def home():
@@ -18,6 +17,12 @@ def home():
         "status": "running",
         "app": "AfriCattles Backend",
         "version": "1.0"
+    })
+
+@app.route("/test")
+def test():
+    return jsonify({
+        "message": "Backend works!"
     })
 
 @app.route("/predict", methods=["POST"])
@@ -34,14 +39,14 @@ def predict():
     img = np.array(img) / 255.0
     img = np.expand_dims(img, axis=0)
 
+    # Temporary test value
     weight = 250.5
 
     return jsonify({
-        "predicted_weight":
-@app.route("/test")
-def test():
-    return jsonify({"message": "Backend works!"})
+        "predicted_weight": weight,
+        "unit": "kg"
+    })
+
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
