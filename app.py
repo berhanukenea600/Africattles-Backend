@@ -10,9 +10,12 @@ CORS(app)
 
 # Load AI model once
 model = tf.keras.models.load_model("africattles_weight_model.keras")
+
 print("Input shape:", model.input_shape)
 print("Output shape:", model.output_shape)
+
 IMG_SIZE = (224, 224)
+
 
 @app.route("/")
 def home():
@@ -22,49 +25,65 @@ def home():
         "version": "1.0"
     })
 
+
 @app.route("/test")
 def test():
     return jsonify({
         "message": "Backend works!"
     })
 
+
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    print("STEP 1")
+    try:
+        print("STEP 1")
 
-    file = request.files["image"]
+        if "image" not in request.files:
+            return jsonify({"error": "No image uploaded"}), 400
 
-    print("STEP 2")
+        file = request.files["image"]
 
-    img = Image.open(file).convert("RGB")
+        print("STEP 2")
 
-    print("STEP 3")
+        img = Image.open(file).convert("RGB")
 
-    img = img.resize((224,224))
+        print("STEP 3")
 
-    print("STEP 4")
+        img = img.resize(IMG_SIZE)
 
-    img = np.array(img, dtype=np.float32)
+        print("STEP 4")
 
-    print("STEP 5")
+        img = np.array(img, dtype=np.float32)
 
-    img = img / 255.0
+        print("STEP 5")
 
-    print("STEP 6")
+        img = img / 255.0
 
-    img = np.expand_dims(img, axis=0)
+        print("STEP 6")
 
-    print("STEP 7")
+        img = np.expand_dims(img, axis=0)
 
-    prediction = model.predict(img, verbose=0)
+        print("STEP 7")
 
-    print("STEP 8")
-    print(prediction)
+        prediction = model.predict(img, verbose=0)
 
-return jsonify({
-    "predicted_weight": float(prediction[0][0])
-})
+        print("STEP 8")
+        print(prediction)
+
+        weight = float(prediction[0][0])
+
+        print("STEP 9")
+
+        return jsonify({
+            "predicted_weight": round(weight, 1)
+        })
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 
 if __name__ == "__main__":
