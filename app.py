@@ -35,7 +35,6 @@ def test():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-
     try:
         print("STEP 1")
 
@@ -47,40 +46,30 @@ def predict():
         print("STEP 2")
 
         img = Image.open(file).convert("RGB")
+        img = img.resize((224, 224))
 
         print("STEP 3")
 
-        img = img.resize(IMG_SIZE)
+        img = np.array(img, dtype=np.float32)
+        img = img / 255.0
+        img = np.expand_dims(img, axis=0)
 
         print("STEP 4")
 
-        img = np.array(img, dtype=np.float32)
-
-        print("STEP 5")
-
-        img = img / 255.0
-
-        print("STEP 6")
-
-        img = np.expand_dims(img, axis=0)
-
-        print("STEP 7")
-
         prediction = model.predict(img, verbose=0)
 
-        print("STEP 8")
+        print("STEP 5")
         print(prediction)
 
         weight = float(prediction[0][0])
 
-        print("STEP 9")
-
         return jsonify({
-            "predicted_weight": round(weight, 1)
+            "predicted_weight": weight
         })
 
     except Exception as e:
-        print("ERROR:", str(e))
+        import traceback
+        traceback.print_exc()
         return jsonify({
             "error": str(e)
         }), 500
