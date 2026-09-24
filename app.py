@@ -64,8 +64,8 @@ def predict():
 
         weight = float(prediction.numpy()[0][0])
 
-           return jsonify({
-         "predicted_weight": weight
+        return jsonify({
+            "predicted_weight": weight
         })
 
     except Exception as e:
