@@ -4,8 +4,11 @@ from PIL import Image
 import tensorflow as tf
 import numpy as np
 import os
+
+# Limit TensorFlow CPU threads
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
+
 app = Flask(__name__)
 CORS(app)
 
@@ -44,7 +47,9 @@ def predict():
 
         if "image" not in request.files:
             print("NO IMAGE", flush=True)
-            return jsonify({"error": "No image uploaded"}), 400
+            return jsonify({
+                "error": "No image uploaded"
+            }), 400
 
         file = request.files["image"]
 
@@ -69,10 +74,27 @@ def predict():
 
         weight = float(prediction.numpy()[0][0])
 
+        # Meat-based reference valuation
+        meat_yield_low = 0.40
+        meat_yield_high = 0.45
+        meat_price_per_kg = 1700
+
+        meat_value_low = (
+            weight * meat_yield_low * meat_price_per_kg
+        )
+
+        meat_value_high = (
+            weight * meat_yield_high * meat_price_per_kg
+        )
+
         print("PREDICTED WEIGHT:", weight, flush=True)
+        print("ESTIMATED MEAT VALUE LOW:", meat_value_low, flush=True)
+        print("ESTIMATED MEAT VALUE HIGH:", meat_value_high, flush=True)
 
         return jsonify({
-            "predicted_weight": weight
+            "predicted_weight": weight,
+            "estimated_meat_value_low": meat_value_low,
+            "estimated_meat_value_high": meat_value_high
         })
 
     except Exception as e:
@@ -84,6 +106,11 @@ def predict():
             "error": str(e)
         }), 500
 
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+        )
