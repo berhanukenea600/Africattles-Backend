@@ -54,23 +54,20 @@ def predict():
         img = img / 255.0
         img = np.expand_dims(img, axis=0)
 
-
         print("STEP 4")
 
-return jsonify({
-    "message": "Image successfully reached the backend!",
-    "image_shape": list(img.shape)
-})
-
-
+        return jsonify({
+            "message": "Image successfully reached the backend!",
+            "image_shape": list(img.shape)
+        })
 
     except Exception as e:
         import traceback
         traceback.print_exc()
+
         return jsonify({
             "error": str(e)
         }), 500
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
