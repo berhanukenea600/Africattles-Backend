@@ -14,6 +14,9 @@ model = tf.keras.models.load_model("africattles_weight_model.keras")
 print("Input shape:", model.input_shape)
 print("Output shape:", model.output_shape)
 
+print("MODEL SUMMARY:", flush=True)
+model.summary()
+
 IMG_SIZE = (224, 224)
 
 
