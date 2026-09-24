@@ -56,10 +56,17 @@ def predict():
 
         print("STEP 4")
 
-        return jsonify({
-            "message": "Image successfully reached the backend!",
-            "image_shape": list(img.shape)
-        })
+        print("STARTING MODEL INFERENCE")
+
+prediction = model(img, training=False)
+
+print("MODEL INFERENCE FINISHED")
+
+weight = float(prediction.numpy()[0][0])
+
+return jsonify({
+    "predicted_weight": weight
+})
 
     except Exception as e:
         import traceback
