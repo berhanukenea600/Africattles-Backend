@@ -57,21 +57,12 @@ def predict():
 
         print("STEP 4")
 
-        return jsonify({
-            "message": "Image successfully reached the backend!",
-            "image_shape": list(img.shape)
+return jsonify({
+    "message": "Image successfully reached the backend!",
+    "image_shape": list(img.shape)
 })
 
-prediction = model.predict(img, verbose=0)
 
-        print("STEP 5")
-        print(prediction)
-
-        weight = float(prediction[0][0])
-
-        return jsonify({
-            "predicted_weight": weight
-        })
 
     except Exception as e:
         import traceback
