@@ -58,15 +58,15 @@ def predict():
 
         print("STARTING MODEL INFERENCE")
 
-prediction = model(img, training=False)
+        prediction = model(img, training=False)
 
-print("MODEL INFERENCE FINISHED")
+        print("MODEL INFERENCE FINISHED")
 
-weight = float(prediction.numpy()[0][0])
+        weight = float(prediction.numpy()[0][0])
 
-return jsonify({
-    "predicted_weight": weight
-})
+           return jsonify({
+         "predicted_weight": weight
+        })
 
     except Exception as e:
         import traceback
