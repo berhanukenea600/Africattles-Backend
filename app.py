@@ -54,9 +54,15 @@ def predict():
         img = img / 255.0
         img = np.expand_dims(img, axis=0)
 
+
         print("STEP 4")
 
-        prediction = model.predict(img, verbose=0)
+        return jsonify({
+            "message": "Image successfully reached the backend!",
+            "image_shape": list(img.shape)
+})
+
+prediction = model.predict(img, verbose=0)
 
         print("STEP 5")
         print(prediction)
